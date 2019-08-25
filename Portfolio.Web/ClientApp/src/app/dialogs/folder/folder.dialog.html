@@ -1,0 +1,41 @@
+<div class="mat-typography">
+  <h2 mat-dialog-title>{{dialogTitle}}</h2>
+  <mat-dialog-content>
+    <section fxLayout="column"
+             fxLayoutAlign="start stretch"
+             class="container">
+      <p class="color warn"
+         *ngIf="!(validFolderName)">This folder name is already in use!</p>
+      <p *ngIf="validFolderName">This folder name is available!</p>
+      <section fxLayout="row"
+               fxLayoutAlign="start center">
+        <mat-form-field>
+          <mat-label>Name</mat-label>
+          <input matInput
+                 [(ngModel)]="folder.name"
+                 #folderInput />
+        </mat-form-field>
+        <mat-icon color="primary"
+                  *ngIf="validFolderName">check_circle_outline</mat-icon>
+        <mat-icon color="warn"
+                  *ngIf="!(validFolderName)">error_outline</mat-icon>
+      </section>
+      <mat-form-field>
+        <mat-label>Description</mat-label>
+        <textarea matInput
+                  mat-autosize
+                  [(ngModel)]="folder.description"
+                  [matAutosizeMinRows]="4"
+                  [matAutosizeMaxRows]="8"></textarea>
+      </mat-form-field>
+    </section>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button
+            color="accent"
+            [disabled]="!(validFolderName)"
+            (click)="saveFolder()">Save</button>
+    <button mat-button
+            mat-dialog-close>Cancel</button>
+  </mat-dialog-actions>
+</div>

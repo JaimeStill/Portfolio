@@ -1,0 +1,61 @@
+<ng-container *ngIf="identity.currentUser$ | async as user else loading">
+  <ng-container *ngIf="theme.theme$ | async as currentTheme">
+    <ng-container *ngIf="sidepanel.state$ | async as panelState">
+      <div class="mat-typography mat-app-background app-frame"
+           fxLayout="column"
+           [ngClass]="currentTheme.name">
+        <mat-toolbar color="primary"
+                     class="app-toolbar">
+          <button mat-icon-button
+                  (click)="sidepanel.toggleState()">
+            <mat-icon>menu</mat-icon>
+          </button>
+          <span fxFlex>Portfolio</span>
+          <button mat-icon-button
+                  matTooltip="Profile Settings"
+                  (click)="viewSettings(user)">
+            <mat-icon>person</mat-icon>
+          </button>
+        </mat-toolbar>
+        <section class="app-body"
+                 fxLayout="row"
+                 fxLayoutAlign="start stretch">
+          <sidepanel [state]="panelState">
+            <panel-link link="/home"
+                        label="Home"
+                        icon="home"
+                        [state]="panelState"></panel-link>
+            <panel-link link="/folders/{{user.id}}"
+                        label="Folders"
+                        icon="folder_open"
+                        [state]="panelState"></panel-link>
+            <panel-link link="/uploads/{{user.id}}"
+                        label="Uploads"
+                        icon="insert_drive_file"
+                        [state]="panelState"></panel-link>
+            <panel-link link="/channels"
+                        label="Channels"
+                        icon="subscriptions"
+                        [state]="panelState"></panel-link>
+            <panel-link link="/convert-gif/{{user.id}}"
+                        label="Convert to Gif"
+                        icon="slow_motion_video"
+                        [state]="panelState"></panel-link>
+            <panel-link link="/switch-user"
+                        label="User Switcher"
+                        icon="supervisor_account"
+                        [state]="panelState"></panel-link>
+          </sidepanel>
+          <div fxFlex
+               class="app-panel">
+            <router-outlet></router-outlet>
+          </div>
+        </section>
+      </div>
+    </ng-container>
+  </ng-container>
+</ng-container>
+<ng-template #loading>
+  <mat-progress-bar mode="indeterminate"
+                    color="accent"></mat-progress-bar>
+</ng-template>

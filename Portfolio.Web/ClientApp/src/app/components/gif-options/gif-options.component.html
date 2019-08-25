@@ -1,0 +1,69 @@
+<mat-toolbar>
+  <span fxFlex>Conversion Options</span>
+  <button mat-icon-button
+          matTooltip="Reset"
+          [disabled]="converting"
+          (click)="clear.emit()">
+    <mat-icon>settings_backup_restore</mat-icon>
+  </button>
+  <button mat-icon-button
+          matTooltip="Convert"
+          [disabled]="!(upload.video) || converting"
+          (click)="create.emit(upload)">
+    <mat-icon>save_alt</mat-icon>
+  </button>
+</mat-toolbar>
+<mat-progress-bar *ngIf="converting"
+                  mode="indeterminate"
+                  color="accent"></mat-progress-bar>
+<section fxLayout="column"
+         fxLayoutAlign="start stretch"
+         class="container">
+  <section fxLayout="row | wrap"
+           fxLayoutAlign="start center">
+    <mat-form-field fxFlex>
+      <mat-label>Algorithm</mat-label>
+      <mat-select [(ngModel)]="upload.options.flags">
+        <mat-option *ngFor="let f of flags"
+                    [value]="f">{{f}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field fxFlex>
+      <mat-label>Logging</mat-label>
+      <mat-select [(ngModel)]="upload.options.log">
+        <mat-option *ngFor="let l of logs"
+                    [value]="l">{{l}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </section>
+  <section fxLayout="row | wrap"
+           fxLayoutAlign="start center">
+    <section fxFlex
+             fxLayout="column"
+             fxLayoutAlign="start stretch">
+      <p>Scale</p>
+      <mat-slider [value]="upload.options.scale"
+                  [min]="scaleMin"
+                  [max]="scaleMax"
+                  [thumbLabel]="true"
+                  [step]="10"
+                  [tickInterval]="1"
+                  (input)="updateScale($event)"></mat-slider>
+    </section>
+    <section fxFlex
+             fxLayout="column"
+             fxLayoutAlign="start stretch">
+      <p>FPS</p>
+      <mat-slider [value]="upload.options.fps"
+                  [min]="fpsMin"
+                  [max]="fpsMax"
+                  [thumbLabel]="true"
+                  [tickInterval]="5"
+                  (input)="updateFps($event)"></mat-slider>
+    </section>
+  </section>
+  <p class="mat-subheading-2"
+     *ngIf="upload.video">Selected Video: {{upload.video.file}}</p>
+  <p class="mat-subheading-2 color warn"
+     *ngIf="!(upload.video)">Select a video to convert it to a .gif!</p>
+</section>

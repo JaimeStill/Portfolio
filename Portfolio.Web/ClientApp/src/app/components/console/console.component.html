@@ -1,0 +1,47 @@
+<mat-toolbar>
+  <span fxFlex>Output</span>
+  <button *ngIf="testable"
+          mat-icon-button
+          matTooltip="Test"
+          (click)="test.emit()">
+    <mat-icon>cached</mat-icon>
+  </button>
+  <button mat-icon-button
+          color="warn"
+          matTooltip="Clear Console"
+          (click)="clear.emit()">
+    <mat-icon>settings_backup_restore</mat-icon>
+  </button>
+  <button mat-icon-button
+          (click)="toggleExpanded()">
+    <mat-icon *ngIf="expanded"
+              matTooltip="Collapse">keyboard_arrow_down</mat-icon>
+    <mat-icon *ngIf="!(expanded)"
+              matTooltip="Expand">keyboard_arrow_right</mat-icon>
+  </button>
+</mat-toolbar>
+<section class="console"
+         #console
+         [style.font-family]="font"
+         [style.background-color]="background"
+         [style.margin.px]="margin"
+         [style.padding.px]="padding"
+         [style.overflow]="overflow"
+         [style.border-radius.px]="borderRadius"
+         [style.height.px]="height"
+         *ngIf="expanded">
+  <ng-container *ngFor="let stream of output">
+    <pre *ngIf="stream?.information?.length > 0"
+         [style.color]="info"
+         [style.margin.px]="innerMargin">{{stream.information}}</pre>
+    <pre *ngIf="stream?.warning?.length > 0"
+         [style.color]="warning"
+         [style.margin.px]="innerMargin">{{stream.warning}}</pre>
+    <pre *ngIf="stream?.error?.length > 0"
+         [style.color]="error"
+         [style.margin.px]="innerMargin">{{stream.error}}</pre>
+    <pre *ngIf="stream?.result?.length > 0"
+         [style.color]="result"
+         [style.margin.px]="innerMargin">{{stream.result}}</pre>
+  </ng-container>
+</section>

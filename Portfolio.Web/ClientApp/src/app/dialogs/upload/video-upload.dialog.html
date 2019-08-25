@@ -1,0 +1,38 @@
+<div class="mat-typography">
+  <h2 mat-dialog-title>Upload Videos</h2>
+  <mat-dialog-content>
+    <section fxLayout="row"
+             fxLayoutAlign="start center"
+             fxLayoutGap="8px"
+             [style.margin-top.px]="24">
+      <section fxLayout="row"
+               fxLayoutAlign="start center"
+               fxLayoutGap="4px"
+               fxFlex>
+        <file-upload accept="video/mp4"
+                     (selected)="fileChange($event)"></file-upload>
+        <button mat-button
+                color="primary"
+                (click)="uploadFiles()"
+                *ngIf="formData"
+                [disabled]="uploading">Upload</button>
+        <button mat-button
+                (click)="clearFiles()"
+                *ngIf="formData"
+                [disabled]="uploading">Cancel</button>
+      </section>
+    </section>
+    <mat-progress-bar *ngIf="uploading"
+                      mode="indeterminate"
+                      color="accent"></mat-progress-bar>
+    <ng-container *ngIf="formData && files">
+      <file-list [files]="files"></file-list>
+    </ng-container>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button
+            color="warn"
+            mat-dialog-close
+            [disabled]="uploading">Cancel</button>
+  </mat-dialog-actions>
+</div>

@@ -1,0 +1,78 @@
+<mat-toolbar>
+  <span>Convert to Gif</span>
+  <button mat-button
+          color="accent"
+          (click)="addVideo()">Add Video</button>
+</mat-toolbar>
+<ng-template #loading>
+  <mat-progress-bar mode="indeterminate"
+                    color="accent"></mat-progress-bar>
+</ng-template>
+<ng-container *ngIf="upload.videos$ | async as videos else loading">
+  <ng-container *ngIf="upload.gifs$ | async as gifs else loading">
+    <ng-container *ngIf="gif.flags$ | async as flags else loading">
+      <ng-container *ngIf="gif.logs$ | async as logs else loading">
+        <ng-container *ngIf="gif.console$ | async as output else loading">
+          <section fxLayout="row"
+                   fxLayoutAlign="start stretch">
+            <section fxLayout="column"
+                     fxLayoutAlign="start stretch">
+              <mat-toolbar>
+                <button mat-icon-button
+                        (click)="toggleVideosExpanded()">
+                  <mat-icon *ngIf="videosExpanded"
+                            matTooltip="Collapse">keyboard_arrow_down</mat-icon>
+                  <mat-icon *ngIf="!(videosExpanded)"
+                            matTooltip="Expand">keyboard_arrow_right</mat-icon>
+                </button>
+                <span>Videos</span>
+              </mat-toolbar>
+              <ng-container *ngIf="videosExpanded">
+                <upload-card *ngFor="let v of videos"
+                             [upload]="v"
+                             [deletable]="false"
+                             [size]="420"
+                             (select)="selectVideo($event)"></upload-card>
+              </ng-container>
+            </section>
+            <section fxLayout="column"
+                     fxLayoutAlign="start stretch"
+                     fxFlex>
+              <gif-options [upload]="gifUpload"
+                           [flags]="flags"
+                           [logs]="logs"
+                           [converting]="converting"
+                           (create)="create($event)"
+                           (clear)="reset()"></gif-options>
+              <console [output]="output"
+                       [testable]="true"
+                       (clear)="gif.clearConsole()"
+                       (test)="gif.populateTestOutput()"></console>
+            </section>
+            <section fxLayout="column"
+                     fxLayoutAlign="start stretch">
+              <mat-toolbar>
+                <span fxFlex></span>
+                <span>Gifs</span>
+                <button mat-icon-button
+                        (click)="toggleGifsExpanded()">
+                  <mat-icon *ngIf="gifsExpanded"
+                            matTooltip="Collapse">keyboard_arrow_down</mat-icon>
+                  <mat-icon *ngIf="!(gifsExpanded)"
+                            matTooltip="Expand">keyboard_arrow_right</mat-icon>
+                </button>
+              </mat-toolbar>
+              <ng-container *ngIf="gifsExpanded">
+                <upload-card *ngFor="let g of gifs"
+                             [upload]="g"
+                             [deletable]="false"
+                             [clickable]="false"
+                             [size]="420"></upload-card>
+              </ng-container>
+            </section>
+          </section>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+  </ng-container>
+</ng-container>

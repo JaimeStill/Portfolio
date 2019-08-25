@@ -1,0 +1,39 @@
+<ng-template #loading>
+  <mat-progress-bar mode="indeterminate"
+                    color="accent"></mat-progress-bar>
+</ng-template>
+<ng-container *ngIf="channelService.channel$ | async as channel else loading">
+  <ng-container *ngIf="channelService.user$ | async as user else loading">
+    <ng-container *ngIf="channelService.messages$ | async as messages else loading">
+      <mat-progress-bar *ngIf="!(initialized)"
+                        mode="indeterminate"
+                        color="accent"></mat-progress-bar>
+      <mat-toolbar>
+        <mat-icon *ngIf="connected"
+                  color="primary">check_circle_outline</mat-icon>
+        <mat-icon *ngIf="!(connected)"
+                  color="warn">error_outline</mat-icon>
+        <span fxFlex>{{channel.name}}</span>
+        <span>Card Size: </span>
+        <mat-slider [value]="size"
+                    [min]="500"
+                    [max]="800"
+                    [step]="20"
+                    [tickInterval]="2"
+                    [style.width.px]="240"
+                    thumbLabel
+                    (input)="setSize($event)"></mat-slider>
+      </mat-toolbar>
+      <p>{{channel.description}}</p>
+      <message-board [messages]="messages"
+                     [user]="user"
+                     [message]="message"
+                     [sending]="sending"
+                     [size]="size"
+                     (update)="channelService.getChannelMessages(channel.id)"
+                     (send)="sendMessage($event, user)"
+                     (edit)="editMessage($event)"
+                     (delete)="deleteMessage($event)"></message-board>
+    </ng-container>
+  </ng-container>
+</ng-container>

@@ -1,0 +1,75 @@
+<div class="mat-typography">
+  <h2 mat-dialog-title>Uploads</h2>
+  <mat-dialog-content>
+    <ng-template #loading>
+      <mat-progress-bar mode="indeterminate"
+                        color="accent"></mat-progress-bar>
+    </ng-template>
+    <ng-container *ngIf="upload.uploads$ | async as uploads else loading">
+      <section fxLayout="row"
+               fxLayoutAlign="start center"
+               fxLayoutGap="8px"
+               [style.margin-top.px]="24">
+        <section fxLayout="row"
+                 fxLayoutAlign="start center"
+                 fxLayoutGap="4px"
+                 fxFlex>
+          <file-upload (selected)="fileChange($event)"></file-upload>
+          <button mat-button
+                  color="primary"
+                  (click)="uploadFiles()"
+                  *ngIf="formData"
+                  [disabled]="uploading">Upload</button>
+          <button mat-button
+                  (click)="clearFiles()"
+                  *ngIf="formData"
+                  [disabled]="uploading">Cancel</button>
+        </section>
+      </section>
+      <mat-progress-bar *ngIf="uploading"
+                        mode="indeterminate"
+                        color="accent"></mat-progress-bar>
+      <ng-container *ngIf="formData && files">
+        <file-list [files]="files"></file-list>
+      </ng-container>
+      <mat-toolbar>
+        <span fxFlex>{{user?.userName}}'s Uploads</span>
+        <section class="container">
+          <span>Card Size: </span>
+          <mat-slider [value]="size"
+                      [min]="500"
+                      [max]="800"
+                      [step]="20"
+                      [tickInterval]="2"
+                      [style.width.px]="240"
+                      thumbLabel
+                      (input)="setSize($event)"></mat-slider>
+        </section>
+      </mat-toolbar>
+      <section class="container"
+               fxLayout="column"
+               fxLayoutAlign="start stretch">
+        <searchbar label="Search"
+                   [minimum]="2"
+                   (search)="upload.searchUploads(user.id, $event)"
+                   (clear)="upload.getUploads(user.id)"></searchbar>
+      </section>
+      <section *ngIf="uploads.length > 0"
+               fxLayout="row | wrap"
+               fxLayoutAlign="start start"
+               class="container">
+        <upload-card *ngFor="let u of uploads"
+                     [upload]="u"
+                     [deletable]="false"
+                     [expanded]="true"
+                     [size]="size"
+                     (select)="selectUpload($event)"></upload-card>
+      </section>
+    </ng-container>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button
+            color="warn"
+            mat-dialog-close>Cancel</button>
+  </mat-dialog-actions>
+</div>

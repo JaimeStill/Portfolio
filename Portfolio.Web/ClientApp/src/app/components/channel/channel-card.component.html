@@ -1,0 +1,28 @@
+<section class="background card elevated"
+         fxLayout="column"
+         fxLayoutAlign="start stretch"
+         [matTooltip]="channel.description"
+         [style.width.px]="size">
+  <section fxLayout="row"
+           fxLayoutAlign="start center"
+           class="container">
+    <p class="mat-title clickable"
+       fxFlex
+       (click)="select.emit(channel)">{{channel.name}}</p>
+    <button mat-icon-button
+            *ngIf="deletable"
+            color="warn"
+            matTooltip="Delete"
+            (click)="delete.emit(channel)">
+      <mat-icon>delete</mat-icon>
+    </button>
+    <button mat-icon-button
+            *ngIf="editable"
+            matTooltip="Edit"
+            (click)="edit.emit(channel)">
+      <mat-icon>edit</mat-icon>
+    </button>
+  </section>
+  <p class="mat-subheading-2">{{channel.user.userName}}</p>
+  <p class="content">{{channel.description | truncate}}</p>
+</section>

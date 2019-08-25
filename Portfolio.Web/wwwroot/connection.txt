@@ -1,0 +1,7 @@
+"Server=(localdb)\ProjectsV13;Database=Hollywood-dev;Trusted_Connection=True;"
+
+"Server=(localdb)\ProjectsV13;Database=UploadDemo-dev;Trusted_Connection=True;"
+
+"Server=(localdb)\ProjectsV13;Database=LastBlood-dev;Trusted_Connection=True;"
+
+"Server=(localdb)\ProjectsV13;Database=Portfolio-dev;Trusted_Connection=True;"

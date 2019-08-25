@@ -1,0 +1,21 @@
+<ng-template #loading>
+  <mat-progress-bar mode="indeterminate"
+                    color="accent"></mat-progress-bar>
+</ng-template>
+<ng-container *ngIf="identity.currentUser$ | async as user else loading">
+  <ng-container *ngIf="identity.domainUsers$ | async as users else loading">
+    <mat-toolbar>Current User: {{user.userName}}</mat-toolbar>
+    <section fxLayout="column"
+             fxLayoutAlign="start stretch">
+      <mat-form-field>
+        <mat-select [(ngModel)]="newUser">
+          <mat-option *ngFor="let u of users"
+                      [value]="u">{{u.samAccountName}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button mat-button
+              [disabled]="switching || !(newUser)"
+              (click)="switchUser()">Switch User</button>
+    </section>
+  </ng-container>
+</ng-container>

@@ -1,0 +1,40 @@
+<ng-template #loading>
+  <mat-progress-bar mode="indeterminate"
+                    color="accent"></mat-progress-bar>
+</ng-template>
+<ng-container *ngIf="channelService.channels$ | async as channels else loading">
+  <ng-container *ngIf="identity.currentUser$ | async as user else loading">
+    <mat-toolbar>
+      <span>Channels</span>
+      <section [style.margin-left.px]="12">
+        <button mat-button
+                color="accent"
+                (click)="addChannel(user.id)">Add Channel</button>
+        <button mat-button
+                color="warn"
+                (click)="openChannelBin(user.id)">Recycle Bin</button>
+      </section>
+    </mat-toolbar>
+    <section fxLayout="column"
+             fxLayoutAlign="start stretch"
+             class="container">
+      <searchbar label="Search"
+                 [minimum]="1"
+                 (search)="channelService.searchChannels($event)"
+                 (clear)="channelService.getChannels()"></searchbar>
+    </section>
+    <section fxLayout="row | wrap"
+             fxLayoutAlign="start start"
+             class="container"
+             *ngIf="channels.length > 0">
+      <channel-card *ngFor="let c of channels"
+                    [channel]="c"
+                    [editable]="user.id === c.userId"
+                    [deletable]="user.id === c.userId"
+                    (delete)="deleteChannel($event)"
+                    (edit)="editChannel($event)"
+                    (select)="viewChannel($event)"></channel-card>
+    </section>
+    <h3 *ngIf="!(channels.length > 0)">No Channels Available!</h3>
+  </ng-container>
+</ng-container>
