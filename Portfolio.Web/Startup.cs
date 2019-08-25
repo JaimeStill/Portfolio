@@ -66,8 +66,8 @@ namespace Portfolio.Web
 
                 services.AddSingleton(new UploadConfig
                 {
-                    DirectoryBasePath = $@"{Environment.ContentRootPath}/wwwroot/",
-                    UrlBasePath = "/"
+                    DirectoryBasePath = $@"{Environment.ContentRootPath}/wwwroot/files/",
+                    UrlBasePath = "/files/"
                 });
 
                 services
@@ -97,8 +97,6 @@ namespace Portfolio.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            app.UseDeveloperExceptionPage();
-
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
