@@ -8,16 +8,16 @@ namespace Portfolio.Web.Hubs
 {
     public class ChannelHub : Hub
     {
-        private SocketGroupProvider groups;
+        private SocketGroupProvider provider;
 
-        public ChannelHub(SocketGroupProvider groups)
+        public ChannelHub(SocketGroupProvider provider)
         {
-            this.groups = groups;
+            this.provider = provider;
         }
 
         public override async Task OnDisconnectedAsync(Exception ex)
         {
-            var connections = groups
+            var connections = provider
                 .SocketGroups
                 .Where(x => x.Connections.Contains(Context.ConnectionId))
                 .Select(x => x.Name)
@@ -25,7 +25,7 @@ namespace Portfolio.Web.Hubs
 
             foreach (var c in connections)
             {
-                await groups.RemoveFromSocketGroup(Context.ConnectionId, c);
+                await provider.RemoveFromSocketGroup(Context.ConnectionId, c);
                 await Groups.RemoveFromGroupAsync(Context.ConnectionId, c);
                 await Clients.GroupExcept(c, Context.ConnectionId).SendAsync("channelAlert", $"{Context.UserIdentifier} has left {c}");
             }
@@ -35,14 +35,14 @@ namespace Portfolio.Web.Hubs
 
         public async Task triggerJoinChannel(string group)
         {
-            await groups.AddToSocketGroup(Context.ConnectionId, group);
+            await provider.AddToSocketGroup(Context.ConnectionId, group);
             await Groups.AddToGroupAsync(Context.ConnectionId, group);
             await Clients.GroupExcept(group, Context.ConnectionId).SendAsync("channelAlert", $"{Context.UserIdentifier} has joined {group}");
         }
 
         public async Task triggerLeaveChannel(string group)
         {
-            await groups.RemoveFromSocketGroup(Context.ConnectionId, group);
+            await provider.RemoveFromSocketGroup(Context.ConnectionId, group);
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, group);
             await Clients.GroupExcept(group, Context.ConnectionId).SendAsync("channelAlert", $"{Context.UserIdentifier} has left {group}");
         }

@@ -144,7 +144,19 @@ namespace Portfolio.Data.Extensions
         public static async Task RemoveUpload(this AppDbContext db, Upload upload)
         {
             await upload.DeleteFile();
+            await upload.RemoveUploadRecords(db);
             db.Uploads.Remove(upload);
+            await db.SaveChangesAsync();
+        }
+
+        static async Task RemoveUploadRecords(this Upload upload, AppDbContext db)
+        {
+            var folderUploads = db.FolderUploads.Where(x => x.UploadId == upload.Id);
+            var channelMessages = db.ChannelMessages.Where(x => x.UploadId == upload.Id);
+
+            db.FolderUploads.RemoveRange(folderUploads);
+            db.ChannelMessages.RemoveRange(channelMessages);
+
             await db.SaveChangesAsync();
         }
 
